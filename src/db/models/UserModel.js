@@ -13,7 +13,8 @@ const User = (sequelize) => {
         },
         login: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            unique: true
         },
         nickName: {
             type: DataTypes.STRING,
