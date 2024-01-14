@@ -1,6 +1,8 @@
 import Fastify from "fastify"
-import { parseRequest } from "./utils/parseRequest.js"
+
 import { combineRoutes, getRoute } from "./router/index.js"
+import { parseRequest } from "./utils/parseRequest.js"
+import responseWrapper from "./utils/responseWrapper.js"
 
 // env
 const PORT = 3000
@@ -10,7 +12,6 @@ const fastify = Fastify({
 })
 
 
-
 fastify.post("/*", function (request, reply) {
     try{
         const {authHeader, method, serviceName, query, payload} = parseRequest(request)
@@ -18,9 +19,9 @@ fastify.post("/*", function (request, reply) {
         const route = getRoute({method, serviceName})
         const response = route({query, payload, authHeader})
 
-        reply.code(200).send(response)
+        reply.code(200).send(responseWrapper(null, response))
     }catch(error){
-        reply.code(500).send({ errors: error.message })
+        reply.code(500).send(responseWrapper(error.message))
     }
 })
 

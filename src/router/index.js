@@ -1,4 +1,4 @@
-import { authRoutes } from "./authRoutes.js"
+import { userRoutes } from "./userRoutes.js"
 import { productsRoutes } from "./productsRoutes.js"
 
 const combinedRoutes = new Map()
@@ -20,6 +20,6 @@ export const getRoute = ({method, serviceName}) => {
 
 export const combineRoutes = () => {
     combinedRoutes
-        .set("auth", authRoutes)
+        .set("user", userRoutes)
         .set("products", productsRoutes)
 }

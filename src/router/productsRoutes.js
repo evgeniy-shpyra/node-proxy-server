@@ -1,5 +1,8 @@
+import { getProduct } from "../services/productServices.js"
+
 const read = ({payload, query, authHeader}) => {
-    return {name: "product, read", payload, query, authHeader}
+    const response = getProduct()
+    return response
 }
 
 export const productsRoutes = new Map ([
