@@ -1,16 +1,16 @@
 import { login, registration } from "../services/userServices.js"
 
-const read = ({payload, query, authHeader}) => {
-    const response = login()
+const login = ({payload}) => {
+    const response = login(payload)
     return response
 }
 
-const create = ({payload, query, authHeader}) => {
-    const response = registration({payload})
+const create = ({payload}) => {
+    const response = registration(payload)
     return response
 }
 
 export const userRoutes = new Map([
-    ["read", read],
+    ["login", login],
     ["create", create],
 ])
