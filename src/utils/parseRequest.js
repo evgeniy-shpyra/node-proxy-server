@@ -1,5 +1,5 @@
 
-const supportedMethods = ['read', 'update', 'create', 'remove']
+const supportedMethods = ['read', 'update', 'create', 'login']
 
 const parseHeaders = (headers) => {
     if(!headers){
@@ -46,9 +46,6 @@ const parseBody = ({body, method, contentTypeHeader = ''}) => {
         throw new Error(incorrectBodyError)
     }
 
-    if(method === "read" && payload){
-        throw new Error(incorrectBodyError)
-    }
     else if(!payload){
         throw new Error(incorrectBodyError)
     }
