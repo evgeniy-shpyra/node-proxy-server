@@ -20,8 +20,8 @@ const initModels = async (sequelize) => {
     ProductModel.belongsTo(UserModel)
 
   
-    await sequelize.sync({ force: true})
-    // await sequelize.sync({ alert: true})
+    // await sequelize.sync({ force: true})
+    await sequelize.sync({ alter: true})
 }
 
 
