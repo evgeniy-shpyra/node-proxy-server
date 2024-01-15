@@ -1,7 +1,7 @@
 
 const productRepo = (sequelize) => ({
     getOne: async (externalProductId, userId) => {
-        console.log(externalProductId, userId)
+        
         const foundedProduct = await sequelize.models.Product.findOne({
             where: {
                 externalId: externalProductId,
@@ -12,9 +12,16 @@ const productRepo = (sequelize) => ({
         return foundedProduct
     },
     getByQuery: async (query) => {
-        
+        const foundedProduct = await sequelize.models.Product.findAll({
+            ...query,
+            order: [
+                ['externalId', 'ASC']
+            ]
+        })
+
+        return foundedProduct
     },
-    create: async (payload, userId) => {
+    createOne: async (payload, userId) => {
         const externalId = payload.id
 
         await sequelize.models.Product.create({
