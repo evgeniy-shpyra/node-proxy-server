@@ -5,7 +5,7 @@ const User = (sequelize) => {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
-            autoIncrement: true
+            autoIncrement: true,
         },
         password: {
             type: DataTypes.STRING(64),
@@ -18,6 +18,10 @@ const User = (sequelize) => {
         },
         nickName: {
             type: DataTypes.STRING,
+            allowNull: false
+        },
+        isOnline: {
+            type: DataTypes.BOOLEAN,
             allowNull: false
         }
     });
