@@ -6,6 +6,15 @@ const Product = (sequelize) => {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true
+        },
+        externalId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            unique: true,
+        },
+        json: {
+            type: DataTypes.TEXT,
+            allowNull: false,
         }
     });
 }
