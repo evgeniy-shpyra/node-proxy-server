@@ -11,12 +11,6 @@ const repo = (sequelize) => ({
             }
         })
 
-        // add data to Online table
-        if(foundedUser.length){
-            await sequelize.models.Online.create({
-                userId: foundedUser[0].id
-            })
-        }
    
         return foundedUser
     },
