@@ -12,12 +12,16 @@ const initRepo = (sequelize) => {
 }
 
 const initModels = async (sequelize) => {
-    Product(sequelize)
-    User(sequelize)
+    const UserModel = User(sequelize)
+    const ProductModel = Product(sequelize)
 
-    // init
-    // await sequelize.sync({ force: true})
-    await sequelize.sync({ alert: true})
+
+    UserModel.hasMany(ProductModel, { onDelete: "cascade"});
+    ProductModel.belongsTo(UserModel)
+
+  
+    await sequelize.sync({ force: true})
+    // await sequelize.sync({ alert: true})
 }
 
 
