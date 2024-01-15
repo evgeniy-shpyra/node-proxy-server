@@ -11,7 +11,7 @@ export const registration = async (payload) => {
 
     // TODO: add validation
 
-    const passwordHash = getHash(password)
+    const passwordHash = getHash(password + login)
 
     await userRepository.create({password: passwordHash, login, nickName}) 
 } 
@@ -22,12 +22,12 @@ export const login = async (payload) => {
     const password = payload.password
     const login = payload.login
 
-    const passwordHash = getHash(password)
+    const passwordHash = getHash(password + login)
 
-    const res = await userRepository.getUser({password: passwordHash, login})
+    const res = await userRepository.loginUser({password: passwordHash, login})
 
-    if(!res.length)
+    if(!res)
         throw new Error("Incorrect login or password")
    
-    return res[0]
+    return res
 }
