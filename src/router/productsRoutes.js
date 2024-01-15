@@ -1,7 +1,8 @@
 import { getProduct } from "../services/productServices.js"
 
 const readRoute = ({payload, query, authHeader}) => {
-    const response = getProduct()
+
+    const response = getProduct(payload, query, authHeader)
     return response
 }
 
