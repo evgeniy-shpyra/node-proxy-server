@@ -5,7 +5,7 @@ const parseHeaders = (headers) => {
     if(!headers){
         throw new Error("Headers are not specified")
     }
-    const authHeader = headers['Authorization'] ? headers['Authorization'] : null
+    const authHeader = headers['authorization'] ? headers['authorization'] : null
     const contentTypeHeader = headers['content-type']
     
     return {authHeader, contentTypeHeader}
