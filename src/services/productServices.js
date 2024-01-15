@@ -30,7 +30,7 @@ export const getProduct = async (payload, query, authHeader) => {
     const skip = query.skip
     const externalId = query.id
 
-    const responseProducts = []
+    let responseProducts = []
 
     if(externalId){
         const foundedProduct = await productRepo.getOne(externalId, user.id)
@@ -41,11 +41,15 @@ export const getProduct = async (payload, query, authHeader) => {
             const newProducts = await fetchExternalProducts({id: externalId})
             responseProducts.push(newProducts)
            
-            await productRepo.create(newProducts, user.id)
+            await productRepo.createOne(newProducts, user.id)
         }
     }
     else if(skip, limit){
+        const foundedProducts = await productRepo.getByQuery({offset: skip, limit})
 
+        
+
+        responseProducts = foundedProducts
     }
 
     return responseProducts
