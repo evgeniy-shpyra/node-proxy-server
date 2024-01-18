@@ -10,7 +10,6 @@ const Product = (sequelize) => {
         externalId: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            unique: true,
         },
         json: {
             type: DataTypes.TEXT,
