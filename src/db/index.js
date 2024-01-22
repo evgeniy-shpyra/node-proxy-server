@@ -25,9 +25,9 @@ const initModels = async (sequelize) => {
 }
 
 
-const DB = async () => { 
-    const sequelize = new Sequelize("postgres", "admin", "1234", {
-        dialect: "postgres",
+const DB = async ({password, login, name}) => { 
+    const sequelize = new Sequelize(name, login, password, {
+        dialect: name,
         logging: false
     })
 
