@@ -1,7 +1,15 @@
 const repo = (sequelize) => ({
     create: async (payload) => {
-        
+        const foundedUser = await sequelize.models.User.findOne({
+            where: {
+                login: payload.login
+            }
+        })
+        if(foundedUser){
+            throw new Error("User with this login already exists")
+        }
         await sequelize.models.User.create({ ...payload, isOnline: false })
+        
     },
     loginUser: async (payload) => {
         const { password, login } = payload
