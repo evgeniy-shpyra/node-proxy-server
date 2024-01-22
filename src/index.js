@@ -1,12 +1,23 @@
 import Fastify from "fastify"
-
+import 'dotenv/config'
 import { combineRoutes, getRoute } from "./router/index.js"
 import { parseRequest } from "./utils/parseRequest.js"
 import responseWrapper from "./utils/responseWrapper.js"
 import DB from "./db/index.js"
 
-// env
-const PORT = 3000
+
+const dbPassword = process.env.DB_PASSWORD
+const dbLogin = process.env.DB_LOGIN 
+const dbName = process.env.DB_NAME 
+
+const port = process.env.PORT
+
+if(!dbPassword || !dbLogin || !dbName) {
+    throw new Error('No database config provided')
+}
+if(!port){
+    throw new Error('No database config provided')
+}
 
 const fastify = Fastify({
     logger: false,
@@ -33,12 +44,12 @@ const onStartServer = async (err, address) => {
         fastify.log.error(err)
         process.exit(1)
     }
-    closeDB = await DB()
+    closeDB = await DB({name: dbName, login: dbLogin, password: dbPassword})
     combineRoutes()
-    console.log(`Server has been started on port: ${PORT}`)
+    console.log(`Server has been started on port: ${port}`)
 }
 
-fastify.listen({ port: PORT }, await onStartServer)
+fastify.listen({ port }, await onStartServer)
 
 process.on("SIGINT", () => {
     if (closeDB) closeDB()
