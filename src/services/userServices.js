@@ -9,8 +9,10 @@ export const registration = async (payload) => {
     const login = payload.login
     const nickName = payload.nickName
 
-    // TODO: add validation
-
+    if(!password || !login || !nickName){
+        throw new Error("Bad request") 
+    }
+   
     const passwordHash = getHash(password + login)
 
     await userRepository.create({password: passwordHash, login, nickName}) 
@@ -21,6 +23,10 @@ export const login = async (payload) => {
 
     const password = payload.password
     const login = payload.login
+
+    if(!password || !login){
+        throw new Error("Bad request")
+    }
 
     const passwordHash = getHash(password + login)
 
