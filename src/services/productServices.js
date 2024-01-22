@@ -1,4 +1,5 @@
 import { getUserRepo, getProductRepo } from "../db/index.js"
+import getMissingIntervals from "../utils/missingIntervals.js"
 
 const externalApiUrl = "https://dummyjson.com/products"
 
@@ -14,29 +15,6 @@ const fetchExternalProducts = async (query) => {
     return await fetch(`${externalApiUrl}${queryUrl}`).then((response) =>
         response.json()
     )
-}
-
-const getMissingIntervals = (ids, startId, endId) => {
-    const missingIntervals = []
-
-    let interval = { start: null, end: null }
-    for (let id = startId; id <= endId; id++) {
-        const isExist = ids.includes(id)
-
-        if (!isExist && interval.start === null) interval.start = id
-        else if (isExist && interval.start !== null) {
-            interval.end = id - 1
-            missingIntervals.push(interval)
-
-            interval = { start: null, end: null }
-        }
-    }
-    if (interval.start && !interval.end) {
-        interval.end = interval.start
-        missingIntervals.push(interval)
-    }
-
-    return missingIntervals
 }
 
 export const getProduct = async (payload, query, authHeader) => {
@@ -56,11 +34,11 @@ export const getProduct = async (payload, query, authHeader) => {
     const skip = query.skip
     const externalId = query.id
 
-    //
+   
 
     let responseProducts = []
 
-    if (externalId) {
+    if (externalId && skip === undefined && limit === undefined) {
         const foundedProduct = await productRepo.getOne(externalId, user.id)
         if (foundedProduct) {
             responseProducts.push(foundedProduct)
@@ -70,7 +48,7 @@ export const getProduct = async (payload, query, authHeader) => {
             await productRepo.createOne(newProducts, user.id)
         }
 
-    } else if (skip !== null && limit !== null) {
+    } else if (skip !== undefined && limit !== undefined && externalId === undefined) { 
         const endId = skip + limit
         const startId = skip + 1
         const foundedProducts = await productRepo.getByQuery({
@@ -80,10 +58,9 @@ export const getProduct = async (payload, query, authHeader) => {
         })
 
         if (foundedProducts.length !== limit) {
-        
             const ids = foundedProducts.map(({ externalId }) => externalId)
             const missingIntervals = getMissingIntervals(ids, startId, endId)
-       
+
             let newProducts = []
             for (let interval of missingIntervals) {
                 const skip = interval.start - 1
@@ -96,13 +73,17 @@ export const getProduct = async (payload, query, authHeader) => {
                 
                 newProducts.push(...fetchedProducts.products)
             }
-
+ 
             await productRepo.createBulk(newProducts, user.id)
-
-            responseProducts = foundedProducts.concat(newProducts)
+            
+            const foundedProductData = foundedProducts.map(product => JSON.parse(product.json))
+            responseProducts = foundedProductData.concat(newProducts)
         } else {
-            responseProducts = foundedProducts
+            responseProducts = foundedProducts.map(product => JSON.parse(product.json))
         }
+    }
+    else {
+        throw new Error("Bad request") 
     }
 
     return responseProducts
